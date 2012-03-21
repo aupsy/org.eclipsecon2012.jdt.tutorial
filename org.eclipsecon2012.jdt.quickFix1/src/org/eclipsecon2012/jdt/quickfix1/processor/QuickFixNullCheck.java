@@ -106,7 +106,7 @@ public class QuickFixNullCheck implements IQuickFixProcessor {
 		blockStatements.add(blockSt);
 		
 		// 2e. replace the dereferencing statement with the if statement using the 'rewrite' object.
-		
+		rewrite.replace(name.getParent().getParent(), ifStatement, null);
 		
 		ASTRewriteCorrectionProposal proposal= new ASTRewriteCorrectionProposal(label, cu, rewrite, 6);
 			
