@@ -48,6 +48,9 @@ public class QuickFixNullCheck implements IQuickFixProcessor {
 		}
 		switch (id) {
 			// 1. Which proposal(s) do we want. Call a method to handle each proposal.
+			case IProblem.PotentialNullLocalVariableReference:
+				QuickFixNullCheck.addNullCheckProposal(context, problem, proposals);
+				break;
 		}
 	}
 	
