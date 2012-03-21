@@ -5,6 +5,7 @@ import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
+import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -42,9 +43,16 @@ public class SampleHandler extends AbstractHandler {
 
 			IWorkspace workspace = ResourcesPlugin.getWorkspace();
 			
-			// 3a. get list of all projects in the workspace
-			
-			// 3b. print the list of projects, packages, types in the dialog
+			IWorkspaceRoot root = workspace.getRoot();  // get the workspace root
+			IProject[] projects = root.getProjects();  // get list of projects in workspace
+			for (int i = 0; i < projects.length; i++) {
+				collectNamesForProject(projects[i], message);
+				MessageDialog.openInformation(
+						shell,
+						"Infos",
+						message.toString());
+				message = new StringBuffer();
+			}
 			
 		} catch (CoreException ex) {
 			throw new ExecutionException("Could not collect names", ex);
