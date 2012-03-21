@@ -3,6 +3,7 @@ package org.eclipsecon2012.jdt.quickfix1.processor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -14,6 +15,7 @@ import org.eclipse.jdt.core.dom.IfStatement;
 import org.eclipse.jdt.core.dom.InfixExpression;
 import org.eclipse.jdt.core.dom.NullLiteral;
 import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.ui.text.java.IInvocationContext;
 import org.eclipse.jdt.ui.text.java.IJavaCompletionProposal;
@@ -99,6 +101,9 @@ public class QuickFixNullCheck implements IQuickFixProcessor {
 		exp.setRightOperand(nullLiteral);
 		
 		// 2d. Add the earlier dereferencing statement into the if's then block
+		Statement blockSt = (Statement)rewrite.createMoveTarget(name.getParent().getParent());
+		List<Statement> blockStatements = block.statements();
+		blockStatements.add(blockSt);
 		
 		// 2e. replace the dereferencing statement with the if statement using the 'rewrite' object.
 		
