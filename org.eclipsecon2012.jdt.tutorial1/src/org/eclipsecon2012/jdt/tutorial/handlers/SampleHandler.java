@@ -10,6 +10,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.jface.viewers.ISelection;
@@ -67,11 +68,13 @@ public class SampleHandler extends AbstractHandler {
 
 	private void collectNamesForProject(IProject project, StringBuffer message) 
 			throws CoreException {
-		// 1a. Check if this is a Java project. If yes, proceed.
-		
-		// 1b. Append its name to the message
-		
-		// 1c. Find out all the package fragments by calling collectNamesForPackage(..)
+		if (project.isNatureEnabled(JavaCore.NATURE_ID)) {	// find only java projects
+			message.append(project.getName());
+			IJavaProject javaProject = JavaCore.create(project);
+			for (IPackageFragment mypackage : javaProject.getPackageFragments()) {
+				collectNamesForPackage(mypackage, message);
+			}
+		}
 		
 	}
 	
