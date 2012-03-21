@@ -7,8 +7,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
+import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
@@ -80,11 +82,20 @@ public class SampleHandler extends AbstractHandler {
 	
 	private void collectNamesForPackage(IPackageFragment mypackage, StringBuffer message) 
 			throws JavaModelException {
-		// 2a. Check if this is a source package. If yes, proceed. Why is this step required?
-		
-		// 2b. Append its name to the message
-		
-		// 2c. Find out all types in this package and call collectTypeName(..)
+		if (mypackage.getKind() == IPackageFragmentRoot.K_SOURCE) { // deal with packages in source folders and ignore those in binary folders or jars
+			String name = mypackage.getElementName();
+			if (!name.isEmpty()) {
+				message.append("\n-->\tPackage " + mypackage.getElementName());
+			}
+			else {
+				message.append("\n-->\tDefault package");
+			}
+			for (ICompilationUnit compilationUnit : mypackage.getCompilationUnits()) {
+				for (IType type : compilationUnit.getAllTypes()) {
+					collectTypeName(type, message);
+				}
+			}
+		}
 	}
 	
 	private void collectTypeName(IType type, StringBuffer message) {
