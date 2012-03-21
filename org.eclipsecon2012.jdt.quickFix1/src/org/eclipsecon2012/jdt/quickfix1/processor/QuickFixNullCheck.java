@@ -9,6 +9,9 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.Block;
+import org.eclipse.jdt.core.dom.IfStatement;
+import org.eclipse.jdt.core.dom.InfixExpression;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.ui.text.java.IInvocationContext;
@@ -72,6 +75,19 @@ public class QuickFixNullCheck implements IQuickFixProcessor {
 		
 		// 2b. Create skeletal ifStatement, a Block to be added as the 'then' statement and an expression to be added
 		// as the condition for the ifStatement. Set the if's condition and then statement
+
+		// create IfStatement
+		IfStatement ifStatement = ast.newIfStatement();
+				
+		// create condition
+		InfixExpression exp = ast.newInfixExpression();
+		
+		// create a block and add the dereference statement into that block
+		Block block = ast.newBlock();
+		
+		ifStatement.setExpression(exp);
+		
+		ifStatement.setThenStatement(block);
 		
 		// 2c. Set the proper operands and operator of the if's condition expression
 		
