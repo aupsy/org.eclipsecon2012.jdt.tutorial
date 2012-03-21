@@ -9,6 +9,7 @@ import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.compiler.IProblem;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.ui.text.java.IInvocationContext;
 import org.eclipse.jdt.ui.text.java.IJavaCompletionProposal;
@@ -63,6 +64,9 @@ public class QuickFixNullCheck implements IQuickFixProcessor {
 		String label= "add null check";
 		
 		// 2. add sanity checks and AST modifications
+		if (!(selectedNode instanceof SimpleName)) {
+			return;
+		}
 		
 		// 2a. What new AST nodes do we want? What AST node do we want to remove?
 		
