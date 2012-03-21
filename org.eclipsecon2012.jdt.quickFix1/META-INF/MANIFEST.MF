@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: QuickFix1
+Bundle-SymbolicName: org.eclipsecon2012.jdt.quickFix1;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.eclipsecon2012.jdt.quickfix1.Activator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.jdt.ui;bundle-version="3.8.0",
+ org.eclipse.ltk.core.refactoring;bundle-version="3.6.0",
+ org.eclipse.jdt.core;bundle-version="3.8.1",
+ org.eclipse.jface.text;bundle-version="3.8.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
