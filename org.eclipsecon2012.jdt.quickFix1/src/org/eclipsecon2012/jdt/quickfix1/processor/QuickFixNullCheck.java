@@ -12,6 +12,7 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.IfStatement;
 import org.eclipse.jdt.core.dom.InfixExpression;
+import org.eclipse.jdt.core.dom.NullLiteral;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.ui.text.java.IInvocationContext;
@@ -90,6 +91,12 @@ public class QuickFixNullCheck implements IQuickFixProcessor {
 		ifStatement.setThenStatement(block);
 		
 		// 2c. Set the proper operands and operator of the if's condition expression
+		SimpleName name = (SimpleName) selectedNode;
+		exp.setOperator(InfixExpression.Operator.NOT_EQUALS);
+		SimpleName operandName = ast.newSimpleName(name.getIdentifier());
+		exp.setLeftOperand(operandName);
+		NullLiteral nullLiteral = ast.newNullLiteral();
+		exp.setRightOperand(nullLiteral);
 		
 		// 2d. Add the earlier dereferencing statement into the if's then block
 		
