@@ -9,6 +9,7 @@ import org.eclipse.core.resources.IWorkspaceRoot;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
@@ -70,6 +71,8 @@ public class SampleHandler extends AbstractHandler {
 				collectNamesForPackage((IPackageFragment)first, message);
 			} else if (first instanceof IType) {
 				collectTypeName((IType)first, message);
+			} else if (first instanceof IPackageFragmentRoot) {
+				collectNamesForPackageFragmentRoot((IPackageFragmentRoot) first, message);
 			}
 			
 			// 4. What happens if you click on the "src" folder and then use the command? What's missing?
@@ -81,8 +84,8 @@ public class SampleHandler extends AbstractHandler {
 		if (project.isNatureEnabled(JavaCore.NATURE_ID)) {	// find only java projects
 			message.append(project.getName());
 			IJavaProject javaProject = JavaCore.create(project);
-			for (IPackageFragment mypackage : javaProject.getPackageFragments()) {
-				collectNamesForPackage(mypackage, message);
+			for (IPackageFragmentRoot mypackage : javaProject.getPackageFragmentRoots()) {
+				collectNamesForPackageFragmentRoot(mypackage, message);
 			}
 		}
 		
@@ -101,6 +104,19 @@ public class SampleHandler extends AbstractHandler {
 			for (ICompilationUnit compilationUnit : mypackage.getCompilationUnits()) {
 				for (IType type : compilationUnit.getAllTypes()) {
 					collectTypeName(type, message);
+				}
+			}
+		}
+	}
+	
+	private void collectNamesForPackageFragmentRoot(IPackageFragmentRoot pkg, StringBuffer message) 
+			throws JavaModelException {
+		if (pkg.getKind() == IPackageFragmentRoot.K_SOURCE) {
+			message.append("\n-->Source folder " + pkg.getElementName());
+			IJavaElement[] children = pkg.getChildren();
+			for (IJavaElement pkgFrag: children) {
+				if(pkgFrag instanceof IPackageFragment) {
+					collectNamesForPackage((IPackageFragment)pkgFrag, message);
 				}
 			}
 		}
